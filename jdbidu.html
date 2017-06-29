@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="GBK">
+	<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="screen-orientation" content="portrait" />
+
+	<title>京东市值离超越百度还有多少？</title>
+	<script type="text/javascript">
+		try {
+			document.domain = "sina.cn";
+		} catch (event) {}
+		(function(doc, win) {
+			var MAX_WIDTH = 400.0125;
+			var resizing = null;
+			var dpr, rem, scale;
+			var metaEl = doc.querySelector('meta[name="viewport"]');
+			win.onresize = function() {
+				if (resizing) {
+					clearTimeout(resizing);
+				}
+				resizing = setTimeout(adjustBase, 100);
+			};
+
+			function adjustBase() {
+				var clientWidth = doc.body.clientWidth || doc.documentElement.clientWidth;
+				if (clientWidth > MAX_WIDTH) {
+					clientWidth = MAX_WIDTH;
+				}
+				doc.querySelector('html').style['font-size'] = (clientWidth / 750) * 10000 / 16 + '%';
+				resizing = null;
+			}
+			if (!doc.documentElement.addEventListener) return;
+			doc.addEventListener('DOMContentLoaded', adjustBase, false);
+		})(document, window);
+	</script>
+
+	<style>
+		html{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			margin:0;
+			padding:0;
+		}
+		li{
+			list-style: none;
+		}
+		.chart {
+			font-size: .3rem;
+			margin: 0 .3rem;
+		}
+		.chart .title {
+			font-size: .4rem;
+			padding: .5rem 0;
+			line-height: .4rem;
+		}
+		.chart .value {
+			font-size: 1rem;
+			line-height: 1.2rem;
+			padding: .8rem 0;
+			text-align: center;
+		}
+
+		.chart .top, .chart .bot{
+			height: 4rem;
+			position: relative;
+			padding-top: .2rem;
+			text-align: center;
+		}
+		.chart .line{
+			border-bottom: solid 1px #C1C2C5;
+		}
+		.chart .line span {
+			color: #9fa4b0;
+			position: absolute;
+			font-size: 14px
+		}
+		.chart .data {
+			position: absolute;
+			top: auto;
+			bottom: 0
+		}
+		.chart .data1 {
+			left: 1rem
+		}
+		.chart .data2 {
+			left: 4.2rem
+		}
+		.chart .data span {
+			display: block;
+			font-size: .3rem;
+			color: #696c74;
+			width: 2rem;
+			padding: .1rem 0;
+			text-align: center
+		}
+		.chart .data span.text1 {
+			position: absolute;
+			font-size: .4rem;
+		}
+		.chart .top .data span.text1 {
+			top: -.65rem;
+		}
+		.chart .data div {
+			width: 2rem;
+			background: #EC7A22
+		}
+		.chart .top .data div {
+			background: #EC7A22
+		}
+		.chart .data .price{
+			height:.5rem;font-size: .5rem;
+		}
+		.chart .data .change{
+			width:1rem; float:left;
+		}
+		.update{
+			font-size: .3rem; position: fixed; bottom: 0; margin: 0 .3rem; padding:.3rem 0;
+		}
+
+	</style>
+
+</head>
+
+<body>
+	<section>
+		<div class="chart">
+			<div class="title">京东市值离超越百度还有</div>
+			<div class="value">37.89亿</div>
+			<div class="cont">
+
+				<div class="top">
+					<div class="data data1">
+						<span class="text1" id="chart_bidu">73.56亿</span>
+						<div style="height: 3rem;" id="c_bidu"></div>
+					</div>
+					<div class="data data2">
+						<span class="text1" id="chart_jd">70.23亿</span>
+						<div style="height: 2.5rem;" id="c_jd"></div>
+					</div>
+				</div>
+				<div class="line">
+					<span></span>
+				</div>
+				<div class="bot" style="height: 2rem;">
+					<div class="data data1">
+						<span>百度</span>
+						<span class="price" id="price_bidu">178.23</span>
+						<span>
+							<span class="change" id="change_bidu">12.54</span>
+							<span class="change" id="zdf_bidu">0.54%</span>
+						</span>
+					</div>
+					<div class="data data2">
+						<span>京东</span>
+						<span class="price" id="price_jd">178.23</span>
+						<span>
+							<span class="change" id="change_jd">12.54</span>
+							<span class="change" id="zdf_jd">0.54%</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="update">
+			<span>单位：USD，</span>
+			<span id="dtime">更新时间：2017-06-27 09:30</span>
+		</div>
+	</section>
+
+	<script type="text/javascript" src="//woocall.sina.com.cn/lib/IO.WebPush4.js"></script>
+	<script type="text/javascript" src="//n.sinaimg.cn/finance/hqbasic_component/HQ_DataApps.js?20170620"></script>
+	<script>
+		function unit(pr_,p_){
+			pr_=Number(pr_);
+			if(isNaN(pr_))return '-';
+			var abs=Math.abs(pr_);
+			if(abs<1e5)return pr_.toFixed(p_);
+			if(abs<1e7)return (pr_/1e4).toFixed(p_)+'万';
+			if(abs<1e8)return (pr_/1e7).toFixed(p_)+'千万';
+			return (pr_/1e8).toFixed(p_)+'亿';
+		}
+		function vol(vol_,withUnit_){
+			var str,unit='';
+			if(vol_>1e12){
+				str=(vol_/1e12).toFixed(0);
+				unit='万亿';
+			}else if(vol_>1e8){
+				str=(vol_/1e8).toFixed(2);
+				unit='亿';
+			}else if(vol_>1e5){
+				str=(vol_/1e4).toFixed(2);
+				unit='万';
+			}else if(vol_>=1)str=(vol_).toFixed(0);
+			else str='-';
+			return withUnit_?(str+unit):str;
+		}
+		function dom(str){
+			return document.getElementById(str);
+		}
+		function BdAndJd(){
+			this.symbol='gb_bidu,gb_jd';
+			this.data=null;
+			this.value=0;
+			this.volume=0;
+			this.offset=10000000000;
+			this.getData();
+		}
+		var bProp=BdAndJd.prototype;
+		bProp.getData=function(){
+			var self=this;
+			new HQ.DataCenter({
+				symbols: self.symbol,
+				QZindex:false,
+				isANeedQZ:false,
+				isANeedPHP:false,
+				isANeedCWZJ:false,
+				getObj: function(data) {
+					self.data=data;
+					self.render();
+				}
+			});
+		};
+		bProp.render=function(){
+			var self=this;
+			if(self.data){
+
+				for(var o in self.data){
+					if(self.data.hasOwnProperty(o)){
+						switch (o){
+							case 'gb_bidu':
+								self.changeData(self.data['gb_bidu'],'bidu');
+								break;
+							case 'gb_jd':
+								self.changeData(self.data['gb_jd'],'jd');
+								break;
+						}
+					}
+				}
+				self.changeValue(Number(self.data['gb_bidu'].balanceVolume)-Number(self.data['gb_jd'].balanceVolume));
+			}
+		};
+		bProp.changeData=function(data,str){
+			var self=this;
+			if(data){
+				dom('chart_'+str).innerHTML=vol(Number(data.balanceVolume),true);
+
+				self.volume=Number(self.data['gb_bidu'].balanceVolume)+self.offset;
+
+				dom('c_'+str).style.height= 4 * data.balanceVolume/self.volume + 'rem';
+				dom('price_'+str).innerHTML=data.price;
+				dom('change_'+str).innerHTML=data.change;
+				dom('change_'+str).style.color=data.type;
+				dom('zdf_'+str).innerHTML=data.percent;
+				dom('zdf_'+str).style.color=data.type;
+			}
+		};
+		bProp.changeValue=function(data_){
+			var self=this;
+			document.querySelector('.value').innerHTML=unit(data_,2);
+			dom('dtime').innerHTML='更新时间：'+self.data['gb_bidu'].regTime;
+		};
+
+		new BdAndJd();
+
+	</script>
+</body>
+
+
+</html>
